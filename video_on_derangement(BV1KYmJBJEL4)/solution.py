@@ -1,0 +1,102 @@
+from manim import *
+
+class Solution(Scene):
+    def construct(self):
+        t1 = VGroup(MathTex(r"A_i: "),Text("第i位正确排列").scale(0.8)).arrange(RIGHT).scale(0.8).set_color(BLUE)
+        t2 = VGroup(MathTex(r"|A_i| = "),Text("第i位正确排列的方法数").scale(0.8)).arrange(RIGHT).scale(0.8).set_color(BLUE)
+        t3 = MathTex(r"a_n = n!-",r"|A_1 \cup A_2 \cup A_3 \cup \cdots \cup A_n|").scale(0.8).set_color(BLUE)
+        t4 = VGroup()
+        t4 += MathTex(r"|A_1 \cup A_2 \cup A_3 \cup \cdots \cup A_n|=")
+        t4 += MathTex(r"+ \sum{|A_i|}")
+        t4 += MathTex(r"- \sum{|A_i \cap A_j |}")
+        t4 += MathTex(r"+ \cdots")
+        t4 += MathTex(r"+ (-1)^{m+1} \sum{|A_{p_1} \cap A_{p_2} \cap \cdots \cap A_{p_m}}|")
+        t4 += MathTex(r"+ \cdots")
+        t4 += MathTex(r"+(-1)^{n+1} |A_1 \cap A_2 \cap \cdots \cap A_n|")
+        t4.arrange(DOWN,aligned_edge = LEFT)
+        t4.scale(0.8)
+        VGroup(t1,t2,t3,t4).arrange(DOWN,aligned_edge = LEFT).to_edge(UL,buff = 1)
+        VGroup(t1,t2,t3).shift(UP*0.2)
+        t4.shift(DOWN*0.1)
+
+        self.play(Write(VGroup(t1,t2,t3)))
+        self.wait()
+        self.play(Write(t4))
+        self.wait()
+
+        t5 = VGroup()
+        t5 += MathTex(r"|A_1 \cup A_2 \cup A_3 \cup \cdots \cup A_n|=")
+        t5 += MathTex(r"+ C_n^1 (n-1)!")
+        t5 += MathTex(r"- C_n^2 (n-2)!")
+        t5 += MathTex(r"+ \cdots")
+        t5 += MathTex(r"+ (-1)^{m+1} C_n^m (n-m)!")
+        t5 += MathTex(r"+ \cdots")
+        t5 += MathTex(r"+(-1)^{n+1} C_n^n (n-n)!")
+        t5.arrange(DOWN,aligned_edge = LEFT)
+        t5.scale(0.8)
+        t5.move_to(t4,aligned_edge = UL)
+
+        i1 = VGroup()
+        i1 += Arrow(start = ORIGIN,end = RIGHT*1.5,color = YELLOW).next_to(t4[1],buff = 1.5)
+        i1 += MathTex(r"C_n^1",r"(n-1)!",color = YELLOW).scale(0.8).next_to(i1[0])
+
+        i2 = VGroup()
+        i2 += i1[0].copy().next_to(t4[2],buff = 1.5)
+        i2 += MathTex(r"- C_n^2",r"(n-2)!",color = YELLOW).scale(0.8).next_to(i2[0])
+
+        i3 = VGroup()
+        i3 += i1[0].copy().next_to(t4[4],buff = 1.5)
+        i3 += MathTex(r"(-1)^{m+1} C_n^m",r"(n-m)!",color = YELLOW).scale(0.8).next_to(i3[0])
+
+        i4 = VGroup()
+        i4 += i1[0].copy().next_to(t4[6],buff = 1.5)
+        i4 += MathTex(r"(-1)^{n+1} C_n^n",r"(n-n)!",color = YELLOW).scale(0.8).next_to(i4[0])
+
+        self.play(GrowArrow(i1[0]))
+        self.wait()
+        self.play(Write(i1[1][0]))
+        self.wait()
+        self.play(Write(i1[1][1]))
+        self.wait()
+        self.play(GrowArrow(i2[0]))
+        self.play(Write(i2[1]))
+        self.play(GrowArrow(i3[0]))
+        self.wait()
+        self.play(Write(i3[1][0]))
+        self.wait()
+        self.play(Write(i3[1][1]))
+        self.wait()
+        self.play(GrowArrow(i4[0]))
+        self.play(Write(i4[1]))
+        self.wait()
+        self.play(ReplacementTransform(t4,t5),Unwrite(VGroup(i1,i2,i3,i4),run_time = 0.6))
+        self.wait()
+
+        t6 = VGroup(t5[0].copy(),MathTex(r"\sum_{i=1}^n (-1)^{i+1}C_n^i(n-i)!").scale(0.8).next_to(t5[0]))
+        
+        self.play(ReplacementTransform(t5,t6))
+        self.wait()
+
+        t7 = MathTex(r"\sum_{i=1}^n \frac{(-1)^{i+1}(n-i)!n!}{i!(n-i)!}").scale(0.8).move_to(t6[1],aligned_edge=LEFT)
+        t8 = MathTex(r"\sum_{i=1}^n \frac{(-1)^{i+1}n!}{i!}").scale(0.8).move_to(t6[1],aligned_edge=LEFT)
+
+        self.play(Transform(t6[1],t7))
+        self.wait()
+        self.play(Transform(t6[1],t8))
+        self.wait()
+
+        t9 = MathTex(r"a_n = n!-\sum_{i=1}^n \frac{(-1)^{i+1}n!}{i!}").scale(0.8).set_color(BLUE).next_to(t6[0],direction=DOWN).to_edge(LEFT,buff = 1)
+        t10 = MathTex(r"a_n = n!(1+\sum_{i=1}^n \frac{(-1)^{i}}{i!})").scale(0.8).set_color(BLUE).next_to(t6[0],direction=DOWN).to_edge(LEFT,buff = 1)
+        t11 = MathTex(r"a_n = n!\sum_{i=0}^n \frac{(-1)^{i}}{i!}").scale(0.8).set_color(BLUE).next_to(t6[0],direction=DOWN).to_edge(LEFT,buff = 1)
+
+        self.play(Write(t9))
+        self.wait()
+        self.play(ReplacementTransform(t9,t10))
+        self.wait()
+        self.play(ReplacementTransform(t10,t11))
+        self.wait()
+
+        t12 = MathTex(r"a_n = n!\sum_{i=0}^n \frac{(-1)^{i}}{i!}")
+
+        self.play(Unwrite(VGroup(t1,t2,t3,t6)),ReplacementTransform(t11,t12),run_time = 2)
+        self.wait()

@@ -1,0 +1,36 @@
+from manim import *
+
+class WithRest(Scene):
+    def construct(self):
+        t1 = Text("n道题  n个正确选项  m个多余选项").scale(0.8)
+        t2 = VGroup(MathTex(r"A_i: "),Text("第i题选对").scale(0.8)).arrange(RIGHT)
+        t3 = MathTex(r"a_{n,m} = A_{n+m}^n - |A_1 \cup A_2 \cup \cdots \cup A_n|")
+        t4 = VGroup(MathTex(r"a_{n,m} = A_{n+m}^n - \sum_{k=1}^n (-1)^{k+1} \times"),Text("至少i道题对的方法数").scale(0.8)).arrange(RIGHT)
+        t5 = MathTex(r"a_{n,m} = A_{n+m}^n - \sum_{k=1}^n (-1)^{k+1}C_n^k A_{n+m-k}^{n-k}")
+        t6 = MathTex(r"a_{n,m} =\sum_{k=0}^n (-1)^{k}C_n^k A_{n+m-k}^{n-k}")
+        t7 = MathTex(r"p_{n,m} =\frac{1}{A_{n+m}^n}\sum_{k=0}^n (-1)^{k}C_n^k A_{n+m-k}^{n-k}")
+        t8 = MathTex(r"p_{n,m} = \sum_{k=0}^n \frac{(-1)^{k}C_n^k }{k!C_{n+m}^k}")
+        t9 = MathTex(r"p_{5,2} = \sum_{k=0}^5 \frac{(-1)^{k}C_5^k }{k!C_{7}^k}=\frac{607}{1260}\approx ",r"0.48",color = ORANGE)
+        VGroup(t1,t2,t3,t4,t5,t6).arrange(DOWN,aligned_edge = LEFT).scale(0.8).to_edge(LEFT,buff = 1)
+        VGroup(t7,t8,t9).arrange(DOWN,aligned_edge = LEFT,buff = 0.5).scale(0.8).to_edge(DL,buff = 1)
+
+        self.play(Write(t1))
+        self.play(Write(t2))
+        self.wait()
+        self.play(Write(t3))
+        self.wait()
+        self.play(Write(t4))
+        self.play(Write(t5))
+        self.play(Write(t6))
+        self.wait()
+        self.play(ReplacementTransform(t6,t6.copy().scale(1.25).set_color(BLUE).to_edge(UL,buff = 1),run_time = 1.5),Unwrite(VGroup(t1,t2,t3,t4,t5),run_time = 1))
+        self.wait()
+        self.play(Write(t7))
+        self.wait()
+        self.play(Write(t8))
+        self.wait()
+        self.play(Write(t9))
+        self.wait()
+        self.play(Indicate(t9[1]))
+        self.wait()
+        
